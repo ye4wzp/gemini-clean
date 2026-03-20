@@ -71,9 +71,27 @@ body{font-family:var(--font);background:var(--bg-primary);color:var(--text-prima
 .preview-card .card-header h4{font-size:13px;font-weight:600;display:flex;align-items:center;gap:6px;color:var(--text-secondary)}
 .preview-card .card-header .dot{width:7px;height:7px;border-radius:50%}
 .dot-red{background:#ef4444}.dot-green{background:#22c55e}
-.preview-card .card-body{padding:16px;min-height:280px;display:flex;align-items:center;justify-content:center;background:repeating-conic-gradient(var(--bg-secondary) 0% 25%,transparent 0% 50%) 50%/16px 16px}
+.preview-card .card-body{padding:16px;min-height:280px;display:flex;align-items:center;justify-content:center;background:repeating-conic-gradient(var(--bg-secondary) 0% 25%,transparent 0% 50%) 50%/16px 16px;cursor:zoom-in}
 .preview-card img{max-width:100%;max-height:380px;border-radius:6px}
 .card-info{font-size:11px;color:var(--text-muted);font-family:'SF Mono',monospace}
+
+/* Comparison Slider */
+.compare-container{position:relative;max-width:960px;margin:0 auto;overflow:hidden;border-radius:var(--radius);border:1px solid var(--border);box-shadow:var(--shadow);background:repeating-conic-gradient(var(--bg-secondary) 0% 25%,transparent 0% 50%) 50%/16px 16px;display:none}
+.compare-container.active{display:block}
+.compare-container img{display:block;width:100%;user-select:none;-webkit-user-drag:none}
+.compare-overlay{position:absolute;top:0;left:0;height:100%;overflow:hidden}
+.compare-overlay img{display:block;height:100%;object-fit:cover;user-select:none;-webkit-user-drag:none}
+.compare-handle{position:absolute;top:0;width:3px;height:100%;background:var(--accent);cursor:ew-resize;z-index:10;transform:translateX(-50%)}
+.compare-handle::after{content:'⇔';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);background:var(--accent);color:#fff;width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;box-shadow:0 2px 8px rgba(0,0,0,.15)}
+.compare-labels{position:absolute;bottom:12px;left:0;right:0;display:flex;justify-content:space-between;padding:0 16px;z-index:5;pointer-events:none}
+.compare-labels span{background:rgba(0,0,0,.6);color:#fff;padding:4px 12px;border-radius:20px;font-size:12px;font-weight:500}
+
+/* Lightbox */
+.lightbox{position:fixed;inset:0;z-index:200;background:rgba(0,0,0,.85);backdrop-filter:blur(8px);display:none;align-items:center;justify-content:center;cursor:zoom-out}
+.lightbox.active{display:flex}
+.lightbox img{max-width:92vw;max-height:88vh;border-radius:8px;box-shadow:0 8px 40px rgba(0,0,0,.4)}
+.lightbox-close{position:absolute;top:20px;right:24px;color:#fff;font-size:28px;cursor:pointer;width:40px;height:40px;display:flex;align-items:center;justify-content:center;border-radius:50%;background:rgba(255,255,255,.1);transition:background .2s}
+.lightbox-close:hover{background:rgba(255,255,255,.2)}
 
 /* Multi preview */
 .multi-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px}
@@ -81,7 +99,10 @@ body{font-family:var(--font);background:var(--bg-primary);color:var(--text-prima
 .image-list{display:flex;flex-direction:column;gap:8px}
 .image-card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-sm);padding:12px 16px;display:flex;align-items:center;gap:14px;transition:all .2s;box-shadow:0 1px 2px rgba(0,0,0,.03)}
 .image-card:hover{border-color:var(--border-hover);box-shadow:var(--shadow)}
-.image-card .thumb{width:64px;height:64px;border-radius:8px;object-fit:cover;background:var(--bg-secondary)}
+.image-card.dragging{opacity:.5;border-color:var(--accent);box-shadow:var(--shadow-lg)}
+.image-card .drag-handle{cursor:grab;color:var(--text-muted);font-size:16px;padding:4px;user-select:none;flex-shrink:0}
+.image-card .drag-handle:active{cursor:grabbing}
+.image-card .thumb{width:64px;height:64px;border-radius:8px;object-fit:cover;background:var(--bg-secondary);cursor:zoom-in}
 .image-card .info{flex:1;min-width:0}
 .image-card .info h4{font-size:13px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .image-card .info .status-text{font-size:12px;color:var(--text-muted);margin-top:2px}
@@ -124,10 +145,21 @@ body{font-family:var(--font);background:var(--bg-primary);color:var(--text-prima
 .faq-item.open .faq-a{max-height:200px;padding:0 20px 16px}
 .faq-a p{font-size:13px;color:var(--text-secondary);line-height:1.7}
 
+/* Output Settings */
+.output-settings{max-width:640px;margin:16px auto 0;padding:0 24px}
+.output-inner{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-sm);padding:12px 16px;display:flex;align-items:center;gap:16px;flex-wrap:wrap;box-shadow:0 1px 2px rgba(0,0,0,.03)}
+.output-inner label{font-size:13px;font-weight:500;color:var(--text-secondary);white-space:nowrap}
+.output-inner select,.output-inner input[type=range]{padding:7px 10px;background:var(--bg-secondary);border:1px solid var(--border);border-radius:var(--radius-xs);color:var(--text-primary);font-size:13px;font-family:var(--font);cursor:pointer;outline:none;transition:border-color .2s}
+.output-inner select:focus{border-color:var(--accent)}
+.quality-group{display:flex;align-items:center;gap:8px}
+.quality-group input[type=range]{width:100px;accent-color:var(--accent)}
+.quality-val{font-size:12px;color:var(--accent);font-weight:600;min-width:32px}
+
 /* Footer */
 .footer{padding:28px 24px;border-top:1px solid var(--border);text-align:center;margin-top:auto;background:var(--bg-card)}
 .footer p{color:var(--text-muted);font-size:12px}
 .footer a{color:var(--accent);text-decoration:none}.footer a:hover{text-decoration:underline}
+.counter-badge{display:inline-flex;align-items:center;gap:4px;background:var(--accent-light);color:var(--accent);padding:3px 10px;border-radius:20px;font-size:11px;font-weight:600;margin-left:8px}
 
 /* Rename settings */
 .rename-panel{max-width:640px;margin:20px auto 0;padding:0 24px}
@@ -147,6 +179,8 @@ body{font-family:var(--font);background:var(--bg-primary);color:var(--text-prima
   .hero{padding:40px 24px 24px}
   .nav a.hide-mobile{display:none}
   .upload-badges{flex-wrap:wrap;gap:8px}
+  .output-inner{flex-direction:column;align-items:flex-start}
+  .rename-inner{flex-direction:column;align-items:flex-start}
 }
 
 /* Animations */
@@ -204,6 +238,23 @@ body{font-family:var(--font);background:var(--bg-primary);color:var(--text-prima
   </div>
 </div>
 
+<div class="output-settings">
+  <div class="output-inner">
+    <label data-i18n="output.format.label">🎨 输出格式：</label>
+    <select id="outputFormat">
+      <option value="auto" data-i18n-opt="output.format.auto">跟随原图</option>
+      <option value="image/png" data-i18n-opt="output.format.png">PNG</option>
+      <option value="image/jpeg" data-i18n-opt="output.format.jpg">JPG</option>
+      <option value="image/webp" data-i18n-opt="output.format.webp">WebP</option>
+    </select>
+    <div class="quality-group">
+      <label data-i18n="output.quality.label">📊 质量：</label>
+      <input type="range" id="outputQuality" min="20" max="100" value="95" step="5">
+      <span class="quality-val" id="qualityVal">95%</span>
+    </div>
+  </div>
+</div>
+
 <div class="steps">
   <div class="step-item"><div class="step-num">1</div><span data-i18n="step.1">选择图片</span></div>
   <div class="step-item"><div class="step-num">2</div><span data-i18n="step.2">算法处理</span></div>
@@ -223,6 +274,10 @@ body{font-family:var(--font);background:var(--bg-primary);color:var(--text-prima
     </div>
   </div>
   <div class="action-panel" style="display:flex;gap:12px;justify-content:center;margin-top:24px">
+    <button class="btn btn-outline btn-sm" id="toggleCompare" style="display:none">
+      <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3"/></svg>
+      <span data-i18n="btn.compare">对比模式</span>
+    </button>
     <button class="btn btn-primary" id="downloadSingleBtn">
       <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
       <span data-i18n="btn.download">下载结果</span>
@@ -231,6 +286,18 @@ body{font-family:var(--font);background:var(--bg-primary);color:var(--text-prima
       <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
       <span data-i18n="btn.reset">重置</span>
     </button>
+  </div>
+  <!-- Compare Slider -->
+  <div class="compare-container" id="compareContainer">
+    <img id="compareResult" alt="Result">
+    <div class="compare-overlay" id="compareOverlay">
+      <img id="compareOriginal" alt="Original">
+    </div>
+    <div class="compare-handle" id="compareHandle"></div>
+    <div class="compare-labels">
+      <span data-i18n="preview.original">原图</span>
+      <span data-i18n="preview.result">去水印结果</span>
+    </div>
   </div>
 </section>
 
@@ -330,8 +397,16 @@ body{font-family:var(--font);background:var(--bg-primary);color:var(--text-prima
 </section>
 
 <footer class="footer">
-  <p>&copy; 2025 Gemini Watermark Remover &mdash; <a href="https://github.com/xiafanxing/gemini-watermark-remover" target="_blank">GitHub</a></p>
+  <p>&copy; 2025 Gemini Watermark Remover &mdash; <a href="https://github.com/xiafanxing/gemini-watermark-remover" target="_blank">GitHub</a>
+  <span class="counter-badge" id="counterBadge" style="display:none">🖼 <span id="totalCount">0</span> <span data-i18n="counter.processed">张已处理</span></span>
+  </p>
 </footer>
+
+<!-- Lightbox -->
+<div class="lightbox" id="lightbox">
+  <div class="lightbox-close" id="lightboxClose">&times;</div>
+  <img id="lightboxImg" alt="Preview">
+</div>
 
 <div class="toast" id="toast"></div>
 
@@ -364,6 +439,11 @@ const I18N = {
     'rename.addCleaned': '保持原名 + "_cleaned"',
     'rename.custom': '自定义名称',
     'rename.placeholder': '输入文件名（不含扩展名）',
+    'output.format.label': '🎨 输出格式：',
+    'output.format.auto': '跟随原图', 'output.format.png': 'PNG', 'output.format.jpg': 'JPG', 'output.format.webp': 'WebP',
+    'output.quality.label': '📊 质量：',
+    'btn.compare': '对比模式', 'btn.compare.off': '并排模式',
+    'counter.processed': '张已处理',
     'faq.title': '常见问题',
     'faq.q1': '这个工具是怎么去除水印的？',
     'faq.a1': 'Gemini 使用标准 Alpha 混合（Alpha Compositing）添加水印。我们通过反向计算这个过程，用数学公式精确还原原始像素值，实现零损失去除。这不是 AI 猜测修复，而是精确的数学逆运算。',
@@ -402,6 +482,11 @@ const I18N = {
     'rename.addCleaned': 'Keep original + "_cleaned"',
     'rename.custom': 'Custom name',
     'rename.placeholder': 'Enter filename (no extension)',
+    'output.format.label': '🎨 Format:',
+    'output.format.auto': 'Same as original', 'output.format.png': 'PNG', 'output.format.jpg': 'JPG', 'output.format.webp': 'WebP',
+    'output.quality.label': '📊 Quality:',
+    'btn.compare': 'Compare', 'btn.compare.off': 'Side by Side',
+    'counter.processed': 'processed',
     'faq.title': 'FAQ',
     'faq.q1': 'How does this tool remove watermarks?',
     'faq.a1': 'Gemini applies watermarks using standard Alpha Compositing. We reverse this process mathematically, restoring the original pixel values with zero loss. This is precise math, not AI guesswork.',
@@ -443,6 +528,22 @@ renameSelect.addEventListener('change', () => {
   customInput.classList.toggle('show', renameSelect.value === 'custom');
   if (renameSelect.value === 'custom') customInput.focus();
 });
+
+// Quality slider
+const qualitySlider = document.getElementById('outputQuality');
+const qualityVal = document.getElementById('qualityVal');
+qualitySlider.addEventListener('input', () => {
+  qualityVal.textContent = qualitySlider.value + '%';
+});
+
+// Output format/quality helpers
+function getOutputType(originalType) {
+  const fmt = document.getElementById('outputFormat').value;
+  if (fmt === 'auto') return originalType === 'image/webp' ? 'image/webp' : (originalType === 'image/jpeg' ? 'image/jpeg' : 'image/png');
+  return fmt;
+}
+function getOutputQuality() { return parseInt(qualitySlider.value) / 100; }
+function getOutputExt(mimeType) { return mimeType === 'image/jpeg' ? '.jpg' : mimeType === 'image/webp' ? '.webp' : '.png'; }
 
 // ===== Watermark Engine =====
 const BG_48_B64 = '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';
@@ -590,7 +691,8 @@ function crc32(data) {
 function getDownloadName(originalName, fileType, index) {
   const mode = document.getElementById('renameOption').value;
   const nameWithoutExt = originalName.replace(/\.[^.]+$/, '');
-  const ext = fileType === 'image/jpeg' ? '.jpg' : '.png';
+  const outType = getOutputType(fileType);
+  const ext = getOutputExt(outType);
   let newName;
   if (mode === 'removeGemini') {
     let cleaned = nameWithoutExt.replace(/Gemini/gi, '');
@@ -611,6 +713,67 @@ function getDownloadName(originalName, fileType, index) {
   return newName + ext;
 }
 
+// ===== Counter =====
+function updateCounter(add) {
+  let count = parseInt(localStorage.getItem('gemini_clean_count') || '0');
+  count += add;
+  localStorage.setItem('gemini_clean_count', count.toString());
+  const badge = document.getElementById('counterBadge');
+  const num = document.getElementById('totalCount');
+  num.textContent = count;
+  if (count > 0) badge.style.display = 'inline-flex';
+}
+// Init counter on load
+(function initCounter() {
+  const count = parseInt(localStorage.getItem('gemini_clean_count') || '0');
+  if (count > 0) {
+    document.getElementById('totalCount').textContent = count;
+    document.getElementById('counterBadge').style.display = 'inline-flex';
+  }
+})();
+
+// ===== Lightbox =====
+const lightbox = document.getElementById('lightbox');
+const lightboxImg = document.getElementById('lightboxImg');
+function openLightbox(src) {
+  lightboxImg.src = src;
+  lightbox.classList.add('active');
+}
+lightbox.addEventListener('click', (e) => {
+  if (e.target !== lightboxImg) lightbox.classList.remove('active');
+});
+document.getElementById('lightboxClose').addEventListener('click', () => lightbox.classList.remove('active'));
+document.addEventListener('keydown', (e) => { if (e.key === 'Escape') lightbox.classList.remove('active'); });
+
+// ===== Comparison Slider =====
+let compareActive = false;
+function initCompareSlider() {
+  const container = document.getElementById('compareContainer');
+  const handle = document.getElementById('compareHandle');
+  const overlay = document.getElementById('compareOverlay');
+  let dragging = false;
+
+  function setPosition(x) {
+    const rect = container.getBoundingClientRect();
+    let pct = Math.max(0, Math.min(1, (x - rect.left) / rect.width));
+    handle.style.left = (pct * 100) + '%';
+    overlay.style.width = (pct * 100) + '%';
+  }
+
+  handle.addEventListener('mousedown', () => dragging = true);
+  container.addEventListener('mousemove', (e) => { if (dragging) setPosition(e.clientX); });
+  document.addEventListener('mouseup', () => dragging = false);
+  handle.addEventListener('touchstart', () => dragging = true, {passive: true});
+  container.addEventListener('touchmove', (e) => { if (dragging) setPosition(e.touches[0].clientX); }, {passive: true});
+  document.addEventListener('touchend', () => dragging = false);
+  // Click to move
+  container.addEventListener('click', (e) => setPosition(e.clientX));
+  // Initial position 50%
+  handle.style.left = '50%';
+  overlay.style.width = '50%';
+}
+initCompareSlider();
+
 // ===== App =====
 let imageQueue = [];
 let processedCount = 0;
@@ -629,6 +792,13 @@ function showToast(msg) {
 function reset() {
   singleSection.classList.remove('active');
   multiSection.classList.remove('active');
+  // Reset compare
+  compareActive = false;
+  document.getElementById('compareContainer').classList.remove('active');
+  document.getElementById('toggleCompare').style.display = 'none';
+  const grid = document.querySelector('.preview-grid');
+  if (grid) grid.style.display = '';
+  //
   imageQueue.forEach(item => { if (item.url) URL.revokeObjectURL(item.url); if (item.resultUrl) URL.revokeObjectURL(item.resultUrl); });
   imageQueue = []; processedCount = 0;
   fileInput.value = '';
@@ -670,16 +840,47 @@ async function processSingle(item) {
   try {
     const { canvas, img, wm } = await processImage(item.file);
     origInfo.textContent = `${img.width}×${img.height} | wm:${wm.size}×${wm.size}`;
-    const blob = await canvasToBlob(canvas, item.file.type === 'image/jpeg' ? 'image/jpeg' : 'image/png', 0.95);
+    const outType = getOutputType(item.file.type);
+    const blob = await canvasToBlob(canvas, outType, getOutputQuality());
     item.blob = blob;
     item.resultUrl = URL.createObjectURL(blob);
     resultImg.src = item.resultUrl;
     resultInfo.textContent = `${img.width}×${img.height} | ${t('status.done')}`;
     item.status = 'done';
+    updateCounter(1);
+
+    // Show compare button & setup comparison
+    const toggleBtn = document.getElementById('toggleCompare');
+    toggleBtn.style.display = 'inline-flex';
+    const compareContainer = document.getElementById('compareContainer');
+    document.getElementById('compareOriginal').src = item.url;
+    document.getElementById('compareResult').src = item.resultUrl;
+
+    toggleBtn.onclick = () => {
+      compareActive = !compareActive;
+      const grid = document.querySelector('.preview-grid');
+      if (compareActive) {
+        grid.style.display = 'none';
+        compareContainer.classList.add('active');
+        toggleBtn.querySelector('span').textContent = t('btn.compare.off');
+      } else {
+        grid.style.display = '';
+        compareContainer.classList.remove('active');
+        toggleBtn.querySelector('span').textContent = t('btn.compare');
+      }
+    };
   } catch (e) {
     resultInfo.textContent = t('status.error');
     console.error(e);
   }
+
+  // Click to zoom
+  document.querySelectorAll('.preview-card .card-body').forEach(body => {
+    body.onclick = () => {
+      const img = body.querySelector('img');
+      if (img && img.src) openLightbox(img.src);
+    };
+  });
 
   document.getElementById('downloadSingleBtn').onclick = () => {
     if (!item.blob) return;
@@ -703,7 +904,9 @@ function processMulti() {
     item.url = URL.createObjectURL(item.file);
     const card = document.createElement('div');
     card.className = 'image-card'; card.id = 'card-' + item.id;
+    card.draggable = true;
     card.innerHTML = `
+      <span class="drag-handle" title="拖拽排序">☰</span>
       <img class="thumb" src="${item.url}" alt="${item.name}">
       <div class="info">
         <h4>${item.name}</h4>
@@ -713,6 +916,32 @@ function processMulti() {
         <button class="btn btn-dark btn-sm" id="dl-${item.id}" style="display:none" data-i18n="btn.download">${t('btn.download')}</button>
       </div>
     `;
+
+    // Drag-reorder
+    card.addEventListener('dragstart', (e) => {
+      card.classList.add('dragging');
+      e.dataTransfer.effectAllowed = 'move';
+      e.dataTransfer.setData('text/plain', item.id);
+    });
+    card.addEventListener('dragend', () => card.classList.remove('dragging'));
+    card.addEventListener('dragover', (e) => {
+      e.preventDefault();
+      e.dataTransfer.dropEffect = 'move';
+      const dragging = list.querySelector('.dragging');
+      if (dragging && dragging !== card) {
+        const rect = card.getBoundingClientRect();
+        const mid = rect.top + rect.height / 2;
+        if (e.clientY < mid) list.insertBefore(dragging, card);
+        else list.insertBefore(dragging, card.nextSibling);
+      }
+    });
+
+    // Thumb click to zoom
+    card.querySelector('.thumb').addEventListener('click', () => {
+      const src = item.resultUrl || item.url;
+      openLightbox(src);
+    });
+
     list.appendChild(card);
   });
 
@@ -726,10 +955,12 @@ async function processQueue() {
     await Promise.all(imageQueue.slice(i, i + concurrency).map(async item => {
       try {
         const { canvas, img, wm } = await processImage(item.file);
-        const blob = await canvasToBlob(canvas, item.file.type === 'image/jpeg' ? 'image/jpeg' : 'image/png', 0.95);
+        const outType = getOutputType(item.file.type);
+        const blob = await canvasToBlob(canvas, outType, getOutputQuality());
         item.blob = blob;
         item.resultUrl = URL.createObjectURL(blob);
         item.status = 'done';
+        updateCounter(1);
         const st = document.getElementById('st-' + item.id);
         if (st) st.innerHTML = `<span style="color:var(--accent)">✓</span> ${img.width}×${img.height} | wm:${wm.size}`;
         const thumb = document.querySelector('#card-' + item.id + ' .thumb');
