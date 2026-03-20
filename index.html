@@ -145,6 +145,9 @@ body{font-family:var(--font);background:var(--bg-primary);color:var(--text-prima
 .rename-select{flex:1;min-width:200px;padding:8px 12px;background:var(--bg-secondary);border:1px solid var(--border);border-radius:var(--radius-xs);color:var(--text-primary);font-size:14px;font-family:var(--font);cursor:pointer;outline:none;transition:border-color .2s}
 .rename-select:focus{border-color:var(--accent)}
 .rename-select option{background:var(--bg-secondary);color:var(--text-primary)}
+.rename-custom{display:none;flex:1;min-width:200px;padding:8px 12px;background:var(--bg-secondary);border:1px solid var(--border);border-radius:var(--radius-xs);color:var(--text-primary);font-size:14px;font-family:var(--font);outline:none;transition:border-color .2s}
+.rename-custom:focus{border-color:var(--accent)}
+.rename-custom.show{display:block}
 </style>
 </head>
 <body>
@@ -185,7 +188,9 @@ body{font-family:var(--font);background:var(--bg-primary);color:var(--text-prima
       <option value="removeGemini" data-i18n-opt="rename.removeGemini">去除文件名中的 "Gemini"</option>
       <option value="addSuffix" data-i18n-opt="rename.addSuffix">保持原名 + "_no_watermark"</option>
       <option value="addCleaned" data-i18n-opt="rename.addCleaned">保持原名 + "_cleaned"</option>
+      <option value="custom" data-i18n-opt="rename.custom">自定义名称</option>
     </select>
+    <input type="text" class="rename-custom" id="customName" placeholder="输入文件名（不含扩展名）" data-i18n-ph="rename.placeholder">
   </div>
 </div>
 
@@ -296,6 +301,8 @@ const I18N = {
     'rename.removeGemini': '去除文件名中的 "Gemini"',
     'rename.addSuffix': '保持原名 + "_no_watermark"',
     'rename.addCleaned': '保持原名 + "_cleaned"',
+    'rename.custom': '自定义名称',
+    'rename.placeholder': '输入文件名（不含扩展名）',
   },
   'en-US': {
     'header.sub': 'Watermark Remover',
@@ -317,6 +324,8 @@ const I18N = {
     'rename.removeGemini': 'Remove "Gemini" from filename',
     'rename.addSuffix': 'Keep original + "_no_watermark"',
     'rename.addCleaned': 'Keep original + "_cleaned"',
+    'rename.custom': 'Custom name',
+    'rename.placeholder': 'Enter filename (no extension)',
   }
 };
 
@@ -329,6 +338,9 @@ function applyI18n() {
   document.querySelectorAll('[data-i18n-opt]').forEach(el => {
     el.textContent = t(el.dataset['i18nOpt']);
   });
+  document.querySelectorAll('[data-i18n-ph]').forEach(el => {
+    el.placeholder = t(el.dataset['i18nPh']);
+  });
 }
 function toggleLang() {
   currentLang = currentLang === 'zh-CN' ? 'en-US' : 'zh-CN';
@@ -336,6 +348,14 @@ function toggleLang() {
   applyI18n();
 }
 document.getElementById('langBtn').addEventListener('click', toggleLang);
+
+// Rename option toggle
+const renameSelect = document.getElementById('renameOption');
+const customInput = document.getElementById('customName');
+renameSelect.addEventListener('change', () => {
+  customInput.classList.toggle('show', renameSelect.value === 'custom');
+  if (renameSelect.value === 'custom') customInput.focus();
+});
 
 // ===== Watermark Engine =====
 const BG_48_B64 = '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';
@@ -480,7 +500,7 @@ function crc32(data) {
 }
 
 // ===== Rename Helper =====
-function getDownloadName(originalName, fileType) {
+function getDownloadName(originalName, fileType, index) {
   const mode = document.getElementById('renameOption').value;
   const nameWithoutExt = originalName.replace(/\.[^.]+$/, '');
   const ext = fileType === 'image/jpeg' ? '.jpg' : '.png';
@@ -491,6 +511,13 @@ function getDownloadName(originalName, fileType) {
     newName = cleaned || 'image_cleaned';
   } else if (mode === 'addSuffix') {
     newName = nameWithoutExt + '_no_watermark';
+  } else if (mode === 'custom') {
+    const custom = document.getElementById('customName').value.trim();
+    if (custom) {
+      newName = index !== undefined ? custom + '_' + (index + 1) : custom;
+    } else {
+      newName = nameWithoutExt + '_cleaned';
+    }
   } else {
     newName = nameWithoutExt + '_cleaned';
   }
@@ -656,8 +683,9 @@ document.getElementById('downloadAllBtn').addEventListener('click', async () => 
   if (!done.length) return;
   showToast(t('toast.zipReady'));
   const zipFiles = [];
-  for (const item of done) {
-    const name = getDownloadName(item.name, item.file.type);
+  for (let idx = 0; idx < done.length; idx++) {
+    const item = done[idx];
+    const name = getDownloadName(item.name, item.file.type, idx);
     const buf = await item.blob.arrayBuffer();
     zipFiles.push({ name, data: new Uint8Array(buf) });
   }
