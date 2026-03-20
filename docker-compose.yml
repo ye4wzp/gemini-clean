@@ -1,0 +1,7 @@
+services:
+  gemini-clean:
+    build: .
+    container_name: gemini-clean
+    ports:
+      - "8090:80"
+    restart: unless-stopped
