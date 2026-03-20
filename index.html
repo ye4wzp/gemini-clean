@@ -137,6 +137,14 @@ body{font-family:var(--font);background:var(--bg-primary);color:var(--text-prima
 /* Toast */
 .toast{position:fixed;bottom:24px;right:24px;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-sm);padding:12px 20px;color:var(--text-primary);font-size:14px;z-index:100;transform:translateY(100px);opacity:0;transition:all .3s}
 .toast.show{transform:translateY(0);opacity:1}
+
+/* Rename settings */
+.rename-panel{max-width:720px;margin:24px auto 0;padding:0 24px}
+.rename-inner{background:var(--bg-card);backdrop-filter:blur(10px);border:1px solid var(--border);border-radius:var(--radius-sm);padding:16px 20px;display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+.rename-inner label{font-size:14px;font-weight:500;color:var(--text-secondary);white-space:nowrap}
+.rename-select{flex:1;min-width:200px;padding:8px 12px;background:var(--bg-secondary);border:1px solid var(--border);border-radius:var(--radius-xs);color:var(--text-primary);font-size:14px;font-family:var(--font);cursor:pointer;outline:none;transition:border-color .2s}
+.rename-select:focus{border-color:var(--accent)}
+.rename-select option{background:var(--bg-secondary);color:var(--text-primary)}
 </style>
 </head>
 <body>
@@ -167,6 +175,17 @@ body{font-family:var(--font);background:var(--bg-primary);color:var(--text-prima
     <h3 data-i18n="upload.text">点击选择 或 拖拽图片至此</h3>
     <p data-i18n="upload.hint">支持 JPG, PNG, WebP — 最多 50 张</p>
     <input type="file" id="fileInput" accept="image/jpeg,image/png,image/webp" multiple>
+  </div>
+</div>
+
+<div class="rename-panel">
+  <div class="rename-inner">
+    <label data-i18n="rename.label">📝 文件命名方式：</label>
+    <select class="rename-select" id="renameOption">
+      <option value="removeGemini" data-i18n-opt="rename.removeGemini">去除文件名中的 "Gemini"</option>
+      <option value="addSuffix" data-i18n-opt="rename.addSuffix">保持原名 + "_no_watermark"</option>
+      <option value="addCleaned" data-i18n-opt="rename.addCleaned">保持原名 + "_cleaned"</option>
+    </select>
   </div>
 </div>
 
@@ -273,6 +292,10 @@ const I18N = {
     'feature.free.title': '完全免费', 'feature.free.desc': '无限制使用，无隐藏付费',
     'status.processing': '处理中...', 'status.done': '完成', 'status.error': '失败',
     'toast.downloaded': '下载完成！', 'toast.zipReady': 'ZIP 打包完成，正在下载...',
+    'rename.label': '📝 文件命名方式：',
+    'rename.removeGemini': '去除文件名中的 "Gemini"',
+    'rename.addSuffix': '保持原名 + "_no_watermark"',
+    'rename.addCleaned': '保持原名 + "_cleaned"',
   },
   'en-US': {
     'header.sub': 'Watermark Remover',
@@ -290,6 +313,10 @@ const I18N = {
     'feature.free.title': 'Completely Free', 'feature.free.desc': 'Unlimited use, no hidden costs',
     'status.processing': 'Processing...', 'status.done': 'Done', 'status.error': 'Failed',
     'toast.downloaded': 'Download complete!', 'toast.zipReady': 'ZIP ready, downloading...',
+    'rename.label': '📝 Rename mode:',
+    'rename.removeGemini': 'Remove "Gemini" from filename',
+    'rename.addSuffix': 'Keep original + "_no_watermark"',
+    'rename.addCleaned': 'Keep original + "_cleaned"',
   }
 };
 
@@ -298,6 +325,9 @@ function t(key) { return I18N[currentLang][key] || key; }
 function applyI18n() {
   document.querySelectorAll('[data-i18n]').forEach(el => {
     el.textContent = t(el.dataset.i18n);
+  });
+  document.querySelectorAll('[data-i18n-opt]').forEach(el => {
+    el.textContent = t(el.dataset['i18nOpt']);
   });
 }
 function toggleLang() {
@@ -449,6 +479,24 @@ function crc32(data) {
   return (crc ^ 0xFFFFFFFF) >>> 0;
 }
 
+// ===== Rename Helper =====
+function getDownloadName(originalName, fileType) {
+  const mode = document.getElementById('renameOption').value;
+  const nameWithoutExt = originalName.replace(/\.[^.]+$/, '');
+  const ext = fileType === 'image/jpeg' ? '.jpg' : '.png';
+  let newName;
+  if (mode === 'removeGemini') {
+    let cleaned = nameWithoutExt.replace(/Gemini/gi, '');
+    cleaned = cleaned.replace(/[_\-\s]+/g, '_').replace(/^_|_$/g, '');
+    newName = cleaned || 'image_cleaned';
+  } else if (mode === 'addSuffix') {
+    newName = nameWithoutExt + '_no_watermark';
+  } else {
+    newName = nameWithoutExt + '_cleaned';
+  }
+  return newName + ext;
+}
+
 // ===== App =====
 let imageQueue = [];
 let processedCount = 0;
@@ -523,8 +571,7 @@ async function processSingle(item) {
     if (!item.blob) return;
     const a = document.createElement('a');
     a.href = item.resultUrl;
-    const ext = item.file.type === 'image/jpeg' ? '.jpg' : '.png';
-    a.download = 'unwatermarked_' + item.name.replace(/\.[^.]+$/, '') + ext;
+    a.download = getDownloadName(item.name, item.file.type);
     a.click();
     showToast(t('toast.downloaded'));
   };
@@ -579,8 +626,7 @@ async function processQueue() {
           dlBtn.onclick = () => {
             const a = document.createElement('a');
             a.href = item.resultUrl;
-            const ext = item.file.type === 'image/jpeg' ? '.jpg' : '.png';
-            a.download = 'unwatermarked_' + item.name.replace(/\.[^.]+$/, '') + ext;
+            a.download = getDownloadName(item.name, item.file.type);
             a.click();
           };
         }
@@ -611,8 +657,7 @@ document.getElementById('downloadAllBtn').addEventListener('click', async () => 
   showToast(t('toast.zipReady'));
   const zipFiles = [];
   for (const item of done) {
-    const ext = item.file.type === 'image/jpeg' ? '.jpg' : '.png';
-    const name = 'unwatermarked_' + item.name.replace(/\.[^.]+$/, '') + ext;
+    const name = getDownloadName(item.name, item.file.type);
     const buf = await item.blob.arrayBuffer();
     zipFiles.push({ name, data: new Uint8Array(buf) });
   }
