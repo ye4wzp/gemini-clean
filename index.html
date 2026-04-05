@@ -3,9 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Gemini Watermark Remover | Gemini 去水印工具</title>
-<meta name="description" content="Free Gemini AI image watermark remover. 100% browser-based, private, fast and lossless. 免费 Gemini AI 图片去水印工具。">
-<meta name="keywords" content="Gemini watermark remover, remove Gemini watermark, Gemini AI, 去水印, Gemini 水印">
+<title>Gemini 工具箱 | 去水印 & 老照片修复</title>
+<meta name="description" content="Gemini AI 图片去水印 + 老照片修复工具。纯浏览器运行，免费极速。支持 AI 智能修复、上色、面部增强。">
+<meta name="keywords" content="Gemini watermark remover, 去水印, 老照片修复, photo restoration, AI 修复, Gemini AI">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2310b981' stroke-width='2'%3E%3Cpath d='M12 3l-1.9 5.8-5.8 1.9 5.8 1.9 1.9 5.8 1.9-5.8 5.8-1.9-5.8-1.9z'/%3E%3C/svg%3E">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
 <style>
@@ -192,6 +192,66 @@ body{font-family:var(--font);background:var(--bg-primary);color:var(--text-prima
 /* Toast */
 .toast{position:fixed;bottom:24px;right:24px;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-sm);padding:10px 18px;color:var(--text-primary);font-size:13px;z-index:100;transform:translateY(100px);opacity:0;transition:all .3s;box-shadow:var(--shadow-lg)}
 .toast.show{transform:translateY(0);opacity:1}
+
+/* Tab Navigation */
+.tab-nav{max-width:1100px;margin:0 auto;padding:12px 24px 0;display:flex;gap:4px}
+.tab-btn{padding:10px 24px;border:none;background:none;font-size:14px;font-weight:600;color:var(--text-muted);cursor:pointer;border-radius:var(--radius-xs) var(--radius-xs) 0 0;transition:all .2s;font-family:var(--font);display:flex;align-items:center;gap:6px;border-bottom:2px solid transparent}
+.tab-btn:hover{color:var(--text-primary);background:var(--bg-secondary)}
+.tab-btn.active{color:var(--accent);border-bottom-color:var(--accent);background:var(--accent-light)}
+.tab-line{height:1px;background:var(--border);margin:0 24px}
+.tab-panel{display:none}
+.tab-panel.active{display:block}
+
+/* API Key Panel */
+.api-key-panel{max-width:640px;margin:0 auto 20px;padding:0 24px}
+.api-key-inner{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-sm);padding:16px 20px;box-shadow:var(--shadow)}
+.api-key-row{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.api-key-row label{font-size:14px;font-weight:600;white-space:nowrap}
+.api-key-input{flex:1;min-width:200px;padding:8px 12px;border:1px solid var(--border);border-radius:var(--radius-xs);font-size:13px;font-family:var(--font);background:var(--bg-secondary);outline:none;transition:border-color .2s}
+.api-key-input:focus{border-color:var(--accent)}
+.api-key-status{font-size:12px;font-weight:500;margin-left:4px}
+.api-key-status.ok{color:#22c55e}
+.api-key-status.fail{color:#ef4444}
+.api-key-hint{font-size:12px;color:var(--text-muted);margin-top:8px;line-height:1.6}
+.api-key-hint a{color:var(--accent)}
+
+/* Mode Cards */
+.mode-section{max-width:640px;margin:0 auto 20px;padding:0 24px}
+.mode-cards{display:grid;grid-template-columns:repeat(5,1fr);gap:8px}
+.mode-card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-sm);padding:14px 8px;text-align:center;cursor:pointer;transition:all .2s;box-shadow:0 1px 2px rgba(0,0,0,.03)}
+.mode-card:hover{border-color:var(--border-hover);transform:translateY(-2px);box-shadow:var(--shadow)}
+.mode-card.active{border-color:var(--accent);background:var(--accent-light)}
+.mode-card.locked{opacity:.5;cursor:not-allowed}
+.mode-card.locked:hover{transform:none;box-shadow:none}
+.mode-icon{font-size:24px;margin-bottom:6px}
+.mode-card h4{font-size:12px;font-weight:600;margin-bottom:2px}
+.mode-card p{font-size:10px;color:var(--text-muted)}
+
+/* Adjustment Panel */
+.adjust-section{max-width:640px;margin:0 auto 20px;padding:0 24px}
+.adjust-panel{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-sm);padding:20px;box-shadow:var(--shadow)}
+.adjust-panel h3{font-size:15px;font-weight:700;margin-bottom:16px}
+.adjust-item{display:flex;align-items:center;gap:12px;margin-bottom:10px}
+.adjust-item label{width:60px;font-size:13px;font-weight:500;color:var(--text-secondary);text-align:right;flex-shrink:0}
+.adjust-item input[type=range]{flex:1;accent-color:var(--accent);height:4px}
+.adjust-item .adj-val{width:36px;font-size:12px;color:var(--accent);font-weight:600;text-align:center}
+.adjust-actions{display:flex;gap:12px;margin-top:16px;justify-content:center}
+
+/* Custom Prompt */
+.custom-prompt{width:100%;margin-top:10px;padding:10px 14px;border:1px solid var(--border);border-radius:var(--radius-xs);font-size:13px;font-family:var(--font);resize:vertical;min-height:60px;outline:none;transition:border-color .2s;background:var(--bg-secondary)}
+.custom-prompt:focus{border-color:var(--accent)}
+
+/* AI Loading */
+.ai-loading{position:absolute;inset:0;background:rgba(255,255,255,.9);display:flex;flex-direction:column;align-items:center;justify-content:center;border-radius:var(--radius);gap:12px;z-index:10}
+.ai-loading-spinner{width:36px;height:36px;border:3px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin 1s linear infinite}
+.ai-loading p{font-size:13px;color:var(--text-secondary);font-weight:500}
+
+/* Restore section mobile */
+@media(max-width:768px){
+  .mode-cards{grid-template-columns:repeat(3,1fr)}
+  .api-key-row{flex-direction:column;align-items:stretch}
+  .tab-btn{padding:8px 16px;font-size:13px}
+}
 </style>
 </head>
 <body>
@@ -209,6 +269,15 @@ body{font-family:var(--font);background:var(--bg-primary);color:var(--text-prima
   </div>
 </header>
 
+<div class="tab-nav">
+  <button class="tab-btn active" data-tab="watermark" id="tabBtnWatermark">🧹 <span data-i18n="tab.watermark">去水印</span>
+  </button>
+  <button class="tab-btn" data-tab="restore" id="tabBtnRestore">📸 <span data-i18n="tab.restore">老照片修复</span>
+  </button>
+</div>
+<div class="tab-line"></div>
+
+<div id="tabWatermark" class="tab-panel active">
 <section class="hero">
   <h2 data-i18n="hero.title">Gemini AI 图像去水印</h2>
   <p data-i18n="hero.subtitle">基于反向 Alpha 混合算法，纯浏览器本地处理，免费、极速、无损</p>
@@ -318,6 +387,91 @@ body{font-family:var(--font);background:var(--bg-primary);color:var(--text-prima
   <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
   <div class="image-list" id="imageList"></div>
 </section>
+</div><!-- end tabWatermark -->
+
+<!-- ===== Restoration Tab ===== -->
+<div id="tabRestore" class="tab-panel">
+<section class="hero">
+  <h2 data-i18n="restore.title">老照片修复</h2>
+  <p data-i18n="restore.subtitle">基础增强免费使用，输入 API Key 解锁 AI 智能修复</p>
+</section>
+
+<div class="api-key-panel">
+  <div class="api-key-inner">
+    <div class="api-key-row">
+      <label>🔑 <span data-i18n="restore.apikey.label">Gemini API Key：</span></label>
+      <input type="password" class="api-key-input" id="apiKeyInput" placeholder="输入你的 API Key（可选）" data-i18n-ph="restore.apikey.placeholder">
+      <button class="btn btn-outline btn-sm" id="testKeyBtn" data-i18n="restore.apikey.test">测试</button>
+      <span class="api-key-status" id="apiKeyStatus"></span>
+    </div>
+    <p class="api-key-hint" data-i18n-html="restore.apikey.hint">ℹ️ 不填写 API Key 也可使用基础增强功能。<a href="https://aistudio.google.com/apikey" target="_blank">获取免费 Key →</a></p>
+  </div>
+</div>
+
+<div class="upload-wrapper">
+  <div class="upload-area" id="restoreUploadArea">
+    <div class="icon">
+      <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+    </div>
+    <h3 data-i18n="restore.upload.text">点击选择 或 拖拽老照片至此</h3>
+    <p data-i18n="restore.upload.hint">支持 JPG, PNG, WebP</p>
+    <input type="file" id="restoreFileInput" accept="image/jpeg,image/png,image/webp">
+  </div>
+</div>
+
+<div class="mode-section" id="modeSection" style="display:none;margin-top:20px">
+  <div class="mode-cards">
+    <div class="mode-card active" data-mode="smart"><div class="mode-icon">🔧</div><h4 data-i18n="restore.mode.smart">智能修复</h4><p data-i18n="restore.mode.smart.desc">自动修复</p></div>
+    <div class="mode-card" data-mode="colorize"><div class="mode-icon">🎨</div><h4 data-i18n="restore.mode.colorize">照片上色</h4><p data-i18n="restore.mode.colorize.desc">黑白变彩色</p></div>
+    <div class="mode-card" data-mode="face"><div class="mode-icon">👤</div><h4 data-i18n="restore.mode.face">面部增强</h4><p data-i18n="restore.mode.face.desc">修复模糊面部</p></div>
+    <div class="mode-card" data-mode="enhance"><div class="mode-icon">✨</div><h4 data-i18n="restore.mode.enhance">画质提升</h4><p data-i18n="restore.mode.enhance.desc">提升分辨率</p></div>
+    <div class="mode-card" data-mode="custom"><div class="mode-icon">💬</div><h4 data-i18n="restore.mode.custom">自定义</h4><p data-i18n="restore.mode.custom.desc">自由输入</p></div>
+  </div>
+  <textarea id="customPromptInput" class="custom-prompt" placeholder="输入自定义修复指令..." data-i18n-ph="restore.custom.placeholder" style="display:none"></textarea>
+</div>
+
+<div class="adjust-section" id="adjustSection" style="display:none;margin-top:20px">
+  <div class="adjust-panel">
+    <h3 data-i18n="restore.adjust.title">基础调节</h3>
+    <div class="adjust-item"><label data-i18n="restore.adj.brightness">亮度</label><input type="range" min="-100" max="100" value="0" id="adjBrightness"><span class="adj-val">0</span></div>
+    <div class="adjust-item"><label data-i18n="restore.adj.contrast">对比度</label><input type="range" min="-100" max="100" value="0" id="adjContrast"><span class="adj-val">0</span></div>
+    <div class="adjust-item"><label data-i18n="restore.adj.saturation">饱和度</label><input type="range" min="-100" max="100" value="0" id="adjSaturation"><span class="adj-val">0</span></div>
+    <div class="adjust-item"><label data-i18n="restore.adj.sharpness">锐化</label><input type="range" min="0" max="100" value="0" id="adjSharpness"><span class="adj-val">0</span></div>
+    <div class="adjust-item"><label data-i18n="restore.adj.denoise">降噪</label><input type="range" min="0" max="100" value="0" id="adjDenoise"><span class="adj-val">0</span></div>
+    <div class="adjust-actions">
+      <button class="btn btn-primary btn-sm" id="autoEnhanceBtn">✨ <span data-i18n="restore.btn.auto">自动增强</span></button>
+      <button class="btn btn-outline btn-sm" id="resetAdjBtn" data-i18n="btn.reset">重置</button>
+    </div>
+  </div>
+</div>
+
+<section class="process-section" id="restorePreview">
+  <div class="preview-grid">
+    <div class="preview-card">
+      <div class="card-header"><h4><span class="dot dot-red"></span> <span data-i18n="preview.original">原图</span></h4></div>
+      <div class="card-body"><img id="restoreOrigImg" alt="Original"></div>
+    </div>
+    <div class="preview-card">
+      <div class="card-header"><h4><span class="dot dot-green"></span> <span data-i18n="restore.preview.result">修复结果</span></h4></div>
+      <div class="card-body" style="position:relative">
+        <img id="restoreResultImg" alt="Result">
+        <div class="ai-loading" id="aiLoading" style="display:none">
+          <div class="ai-loading-spinner"></div>
+          <p data-i18n="restore.ai.loading">AI 修复中...</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div style="display:flex;gap:12px;justify-content:center;margin-top:24px">
+    <button class="btn btn-primary" id="aiRestoreBtn" style="display:none">🤖 <span data-i18n="restore.btn.ai">AI 修复</span></button>
+    <button class="btn btn-primary" id="downloadRestoreBtn">
+      <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
+      <span data-i18n="btn.download">下载结果</span>
+    </button>
+    <button class="btn btn-outline" id="resetRestoreBtn" data-i18n="btn.reset">重置</button>
+  </div>
+</section>
+</div><!-- end tabRestore -->
 
 <!-- Features -->
 <section class="features">
@@ -455,6 +609,30 @@ const I18N = {
     'faq.a4': '可以。一次最多可选择 50 张图片，工具会自动并行处理并支持一键打包下载 ZIP 文件。',
     'faq.q5': '去水印后画质会下降吗？',
     'faq.a5': '不会。我们使用精确的反向 Alpha 混合算法，逐像素还原原始值。这是数学精确的逆运算，不存在画质损失。',
+    'tab.watermark': '去水印', 'tab.restore': '老照片修复',
+    'restore.title': '老照片修复',
+    'restore.subtitle': '基础增强免费使用，输入 API Key 解锁 AI 智能修复',
+    'restore.apikey.label': 'Gemini API Key：',
+    'restore.apikey.placeholder': '输入你的 API Key（可选）',
+    'restore.apikey.test': '测试',
+    'restore.apikey.ok': '✅ 连接成功',
+    'restore.apikey.fail': '❌ 无效 Key',
+    'restore.upload.text': '点击选择 或 拖拽老照片至此',
+    'restore.upload.hint': '支持 JPG, PNG, WebP',
+    'restore.mode.smart': '智能修复', 'restore.mode.smart.desc': '自动修复',
+    'restore.mode.colorize': '照片上色', 'restore.mode.colorize.desc': '黑白变彩色',
+    'restore.mode.face': '面部增强', 'restore.mode.face.desc': '修复模糊面部',
+    'restore.mode.enhance': '画质提升', 'restore.mode.enhance.desc': '提升分辨率',
+    'restore.mode.custom': '自定义', 'restore.mode.custom.desc': '自由输入',
+    'restore.custom.placeholder': '输入自定义修复指令...',
+    'restore.adjust.title': '基础调节',
+    'restore.adj.brightness': '亮度', 'restore.adj.contrast': '对比度',
+    'restore.adj.saturation': '饱和度', 'restore.adj.sharpness': '锐化', 'restore.adj.denoise': '降噪',
+    'restore.btn.auto': '自动增强', 'restore.btn.ai': 'AI 修复',
+    'restore.preview.result': '修复结果',
+    'restore.ai.loading': 'AI 修复中...',
+    'restore.ai.done': 'AI 修复完成',
+    'restore.ai.error': 'AI 修复失败，请检查 API Key',
   },
   'en-US': {
     'header.sub': 'Watermark Remover',
@@ -498,6 +676,30 @@ const I18N = {
     'faq.a4': 'Yes. Select up to 50 images at once. The tool processes them in parallel and supports one-click ZIP download.',
     'faq.q5': 'Will image quality be reduced?',
     'faq.a5': 'No. We use a precise reverse alpha blending algorithm that restores each pixel to its original value. This is mathematically exact — no quality loss.',
+    'tab.watermark': 'Watermark Remover', 'tab.restore': 'Photo Restoration',
+    'restore.title': 'Old Photo Restoration',
+    'restore.subtitle': 'Free basic enhancement. Enter API Key to unlock AI-powered restoration',
+    'restore.apikey.label': 'Gemini API Key:',
+    'restore.apikey.placeholder': 'Enter your API Key (optional)',
+    'restore.apikey.test': 'Test',
+    'restore.apikey.ok': '✅ Connected',
+    'restore.apikey.fail': '❌ Invalid Key',
+    'restore.upload.text': 'Click to select or drag old photo here',
+    'restore.upload.hint': 'Supports JPG, PNG, WebP',
+    'restore.mode.smart': 'Smart Fix', 'restore.mode.smart.desc': 'Auto restore',
+    'restore.mode.colorize': 'Colorize', 'restore.mode.colorize.desc': 'B&W to color',
+    'restore.mode.face': 'Face Enhance', 'restore.mode.face.desc': 'Fix blurry faces',
+    'restore.mode.enhance': 'HD Enhance', 'restore.mode.enhance.desc': 'Upscale quality',
+    'restore.mode.custom': 'Custom', 'restore.mode.custom.desc': 'Free input',
+    'restore.custom.placeholder': 'Enter custom restoration instructions...',
+    'restore.adjust.title': 'Basic Adjustments',
+    'restore.adj.brightness': 'Brightness', 'restore.adj.contrast': 'Contrast',
+    'restore.adj.saturation': 'Saturation', 'restore.adj.sharpness': 'Sharpen', 'restore.adj.denoise': 'Denoise',
+    'restore.btn.auto': 'Auto Enhance', 'restore.btn.ai': 'AI Restore',
+    'restore.preview.result': 'Restored',
+    'restore.ai.loading': 'AI restoring...',
+    'restore.ai.done': 'AI restoration complete',
+    'restore.ai.error': 'AI restore failed, check API Key',
   }
 };
 
@@ -1024,6 +1226,272 @@ document.querySelectorAll('.faq-q').forEach(q => {
   q.addEventListener('click', () => {
     const item = q.parentElement;
     item.classList.toggle('open');
+  });
+});
+
+// ===== Tab Switching =====
+document.querySelectorAll('.tab-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('tab' + btn.dataset.tab.charAt(0).toUpperCase() + btn.dataset.tab.slice(1)).classList.add('active');
+  });
+});
+
+// ===== Restoration Module =====
+let restoreFile = null, restoreOrigCanvas = null, restoreResultCanvas = null;
+let restoreOrigUrl = null;
+const apiKeyInput = document.getElementById('apiKeyInput');
+const modeSection = document.getElementById('modeSection');
+const adjustSection = document.getElementById('adjustSection');
+const restorePreview = document.getElementById('restorePreview');
+let currentMode = 'smart';
+
+// Load saved API key
+const savedKey = localStorage.getItem('gemini_api_key');
+if (savedKey) { apiKeyInput.value = savedKey; modeSection.style.display = 'block'; }
+
+// API Key save on change
+apiKeyInput.addEventListener('input', () => {
+  const key = apiKeyInput.value.trim();
+  if (key) { localStorage.setItem('gemini_api_key', key); modeSection.style.display = 'block'; }
+  else { localStorage.removeItem('gemini_api_key'); modeSection.style.display = 'none'; }
+  document.getElementById('apiKeyStatus').textContent = '';
+  document.getElementById('apiKeyStatus').className = 'api-key-status';
+});
+
+// Test API Key
+document.getElementById('testKeyBtn').addEventListener('click', async () => {
+  const key = apiKeyInput.value.trim();
+  const status = document.getElementById('apiKeyStatus');
+  if (!key) { status.textContent = t('restore.apikey.fail'); status.className = 'api-key-status fail'; return; }
+  status.textContent = '...';
+  try {
+    const r = await fetch(`https://generativelanguage.googleapis.com/v1beta/models?key=${key}`);
+    if (r.ok) { status.textContent = t('restore.apikey.ok'); status.className = 'api-key-status ok'; modeSection.style.display = 'block'; }
+    else { status.textContent = t('restore.apikey.fail'); status.className = 'api-key-status fail'; }
+  } catch(e) { status.textContent = t('restore.apikey.fail'); status.className = 'api-key-status fail'; }
+});
+
+// Mode card selection
+document.querySelectorAll('.mode-card').forEach(card => {
+  card.addEventListener('click', () => {
+    document.querySelectorAll('.mode-card').forEach(c => c.classList.remove('active'));
+    card.classList.add('active');
+    currentMode = card.dataset.mode;
+    document.getElementById('customPromptInput').style.display = currentMode === 'custom' ? 'block' : 'none';
+  });
+});
+
+// Restore upload
+const restoreUploadArea = document.getElementById('restoreUploadArea');
+const restoreFileInput = document.getElementById('restoreFileInput');
+restoreUploadArea.addEventListener('click', () => restoreFileInput.click());
+restoreUploadArea.addEventListener('dragover', e => { e.preventDefault(); restoreUploadArea.classList.add('dragover'); });
+restoreUploadArea.addEventListener('dragleave', () => restoreUploadArea.classList.remove('dragover'));
+restoreUploadArea.addEventListener('drop', e => { e.preventDefault(); restoreUploadArea.classList.remove('dragover'); if (e.dataTransfer.files[0]) handleRestoreFile(e.dataTransfer.files[0]); });
+restoreFileInput.addEventListener('change', e => { if (e.target.files[0]) handleRestoreFile(e.target.files[0]); });
+
+function handleRestoreFile(file) {
+  if (!file.type.match(/image\/(jpeg|png|webp)/)) return;
+  restoreFile = file;
+  const img = new Image();
+  img.onload = () => {
+    restoreOrigCanvas = document.createElement('canvas');
+    restoreOrigCanvas.width = img.width; restoreOrigCanvas.height = img.height;
+    restoreOrigCanvas.getContext('2d').drawImage(img, 0, 0);
+    if (restoreOrigUrl) URL.revokeObjectURL(restoreOrigUrl);
+    restoreOrigUrl = URL.createObjectURL(file);
+    document.getElementById('restoreOrigImg').src = restoreOrigUrl;
+    restoreResultCanvas = document.createElement('canvas');
+    restoreResultCanvas.width = img.width; restoreResultCanvas.height = img.height;
+    restoreResultCanvas.getContext('2d').drawImage(img, 0, 0);
+    document.getElementById('restoreResultImg').src = restoreResultCanvas.toDataURL();
+    restorePreview.classList.add('active');
+    adjustSection.style.display = 'block';
+    if (apiKeyInput.value.trim()) document.getElementById('aiRestoreBtn').style.display = 'inline-flex';
+    applyBasicAdjustments();
+    restorePreview.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  };
+  img.src = URL.createObjectURL(file);
+}
+
+// Adjustment sliders
+const adjSliders = ['adjBrightness','adjContrast','adjSaturation','adjSharpness','adjDenoise'];
+adjSliders.forEach(id => {
+  const slider = document.getElementById(id);
+  const valSpan = slider.parentElement.querySelector('.adj-val');
+  slider.addEventListener('input', () => { valSpan.textContent = slider.value; applyBasicAdjustments(); });
+});
+
+function applyBasicAdjustments() {
+  if (!restoreOrigCanvas) return;
+  const ctx = restoreResultCanvas.getContext('2d');
+  ctx.drawImage(restoreOrigCanvas, 0, 0);
+  const imageData = ctx.getImageData(0, 0, restoreResultCanvas.width, restoreResultCanvas.height);
+  const d = imageData.data;
+  const brightness = parseInt(document.getElementById('adjBrightness').value);
+  const contrast = parseInt(document.getElementById('adjContrast').value);
+  const saturation = parseInt(document.getElementById('adjSaturation').value);
+  const factor = (259 * (contrast + 255)) / (255 * (259 - contrast));
+  for (let i = 0; i < d.length; i += 4) {
+    let r = d[i], g = d[i+1], b = d[i+2];
+    r += brightness; g += brightness; b += brightness;
+    r = factor * (r - 128) + 128; g = factor * (g - 128) + 128; b = factor * (b - 128) + 128;
+    if (saturation !== 0) {
+      const gray = 0.299*r + 0.587*g + 0.114*b;
+      const s = 1 + saturation / 100;
+      r = gray + s * (r - gray); g = gray + s * (g - gray); b = gray + s * (b - gray);
+    }
+    d[i] = Math.max(0, Math.min(255, r));
+    d[i+1] = Math.max(0, Math.min(255, g));
+    d[i+2] = Math.max(0, Math.min(255, b));
+  }
+  ctx.putImageData(imageData, 0, 0);
+  // Simple sharpen via canvas filter
+  const sharpness = parseInt(document.getElementById('adjSharpness').value);
+  if (sharpness > 0) {
+    const amt = sharpness / 100 * 2;
+    const tmp = document.createElement('canvas');
+    tmp.width = restoreResultCanvas.width; tmp.height = restoreResultCanvas.height;
+    const tctx = tmp.getContext('2d');
+    tctx.filter = `blur(1px)`; tctx.drawImage(restoreResultCanvas, 0, 0);
+    ctx.globalAlpha = amt; ctx.globalCompositeOperation = 'difference';
+    ctx.drawImage(tmp, 0, 0);
+    ctx.globalCompositeOperation = 'source-over'; ctx.globalAlpha = 1;
+    // simplified unsharp: just re-apply with contrast boost
+    const sd = ctx.getImageData(0,0,restoreResultCanvas.width,restoreResultCanvas.height);
+    const od = restoreOrigCanvas.getContext('2d').getImageData(0,0,restoreOrigCanvas.width,restoreOrigCanvas.height);
+    for(let i=0;i<sd.data.length;i+=4){
+      sd.data[i]=Math.max(0,Math.min(255,od.data[i]+(od.data[i]-sd.data[i])*amt));
+      sd.data[i+1]=Math.max(0,Math.min(255,od.data[i+1]+(od.data[i+1]-sd.data[i+1])*amt));
+      sd.data[i+2]=Math.max(0,Math.min(255,od.data[i+2]+(od.data[i+2]-sd.data[i+2])*amt));
+    }
+    ctx.putImageData(sd,0,0);
+    // re-apply brightness/contrast/saturation on sharpened
+    const fd = ctx.getImageData(0,0,restoreResultCanvas.width,restoreResultCanvas.height);
+    for(let i=0;i<fd.data.length;i+=4){
+      let r2=fd.data[i]+brightness,g2=fd.data[i+1]+brightness,b2=fd.data[i+2]+brightness;
+      r2=factor*(r2-128)+128;g2=factor*(g2-128)+128;b2=factor*(b2-128)+128;
+      if(saturation!==0){const gr=0.299*r2+0.587*g2+0.114*b2;const ss=1+saturation/100;r2=gr+ss*(r2-gr);g2=gr+ss*(g2-gr);b2=gr+ss*(b2-gr);}
+      fd.data[i]=Math.max(0,Math.min(255,r2));fd.data[i+1]=Math.max(0,Math.min(255,g2));fd.data[i+2]=Math.max(0,Math.min(255,b2));
+    }
+    ctx.putImageData(fd,0,0);
+  }
+  document.getElementById('restoreResultImg').src = restoreResultCanvas.toDataURL();
+}
+
+// Auto enhance
+document.getElementById('autoEnhanceBtn').addEventListener('click', () => {
+  document.getElementById('adjBrightness').value = 10;
+  document.getElementById('adjContrast').value = 25;
+  document.getElementById('adjSaturation').value = 15;
+  document.getElementById('adjSharpness').value = 30;
+  document.getElementById('adjDenoise').value = 0;
+  adjSliders.forEach(id => {
+    const s = document.getElementById(id);
+    s.parentElement.querySelector('.adj-val').textContent = s.value;
+  });
+  applyBasicAdjustments();
+});
+
+// Reset adjustments
+document.getElementById('resetAdjBtn').addEventListener('click', () => {
+  adjSliders.forEach(id => {
+    const s = document.getElementById(id);
+    s.value = id === 'adjSharpness' || id === 'adjDenoise' ? 0 : 0;
+    s.parentElement.querySelector('.adj-val').textContent = '0';
+  });
+  applyBasicAdjustments();
+});
+
+// AI Restore via Gemini API
+const RESTORE_PROMPTS = {
+  smart: 'Restore and enhance this old damaged photo. Fix scratches, tears, stains, fading, and any damage. Improve clarity and sharpness while preserving the original composition. Output a high-quality restored version.',
+  colorize: 'Colorize this black and white photo with natural, realistic colors. Add appropriate skin tones, clothing colors, and environmental colors based on the era and context of the photo.',
+  face: 'Enhance and restore the faces in this old photo. Fix any blurriness, improve facial details, restore skin texture, and make the faces clearer while keeping the photo natural.',
+  enhance: 'Enhance the quality and resolution of this old photo. Improve sharpness, reduce noise and grain, fix color issues, and make it look like a modern high-quality photograph.',
+};
+
+document.getElementById('aiRestoreBtn').addEventListener('click', async () => {
+  const key = apiKeyInput.value.trim();
+  if (!key) { showToast(t('restore.apikey.fail')); return; }
+  if (!restoreOrigCanvas) return;
+  const loading = document.getElementById('aiLoading');
+  loading.style.display = 'flex';
+  document.getElementById('aiRestoreBtn').disabled = true;
+  try {
+    const base64 = restoreOrigCanvas.toDataURL('image/jpeg', 0.9).split(',')[1];
+    const prompt = currentMode === 'custom'
+      ? (document.getElementById('customPromptInput').value.trim() || RESTORE_PROMPTS.smart)
+      : RESTORE_PROMPTS[currentMode];
+    const resp = await fetch(
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-preview-image-generation:generateContent?key=${key}`,
+      {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          contents: [{ parts: [{ text: prompt }, { inline_data: { mime_type: 'image/jpeg', data: base64 } }] }],
+          generationConfig: { responseModalities: ['TEXT', 'IMAGE'] }
+        })
+      }
+    );
+    const data = await resp.json();
+    if (!resp.ok) throw new Error(data.error?.message || 'API error');
+    const imgPart = data.candidates?.[0]?.content?.parts?.find(p => p.inline_data);
+    if (!imgPart) throw new Error('No image in response');
+    const resultImg = new Image();
+    resultImg.onload = () => {
+      restoreResultCanvas.width = resultImg.width;
+      restoreResultCanvas.height = resultImg.height;
+      restoreResultCanvas.getContext('2d').drawImage(resultImg, 0, 0);
+      document.getElementById('restoreResultImg').src = restoreResultCanvas.toDataURL();
+      loading.style.display = 'none';
+      document.getElementById('aiRestoreBtn').disabled = false;
+      showToast(t('restore.ai.done'));
+    };
+    resultImg.src = 'data:' + imgPart.inline_data.mime_type + ';base64,' + imgPart.inline_data.data;
+  } catch(e) {
+    loading.style.display = 'none';
+    document.getElementById('aiRestoreBtn').disabled = false;
+    showToast(t('restore.ai.error') + ': ' + e.message);
+    console.error('AI restore error:', e);
+  }
+});
+
+// Download restore result
+document.getElementById('downloadRestoreBtn').addEventListener('click', () => {
+  if (!restoreResultCanvas) return;
+  const a = document.createElement('a');
+  a.href = restoreResultCanvas.toDataURL('image/png');
+  a.download = 'restored_' + (restoreFile ? restoreFile.name : 'photo.png');
+  a.click();
+  showToast(t('toast.downloaded'));
+});
+
+// Reset restore
+document.getElementById('resetRestoreBtn').addEventListener('click', () => {
+  restorePreview.classList.remove('active');
+  adjustSection.style.display = 'none';
+  document.getElementById('aiRestoreBtn').style.display = 'none';
+  document.getElementById('restoreOrigImg').src = '';
+  document.getElementById('restoreResultImg').src = '';
+  restoreFile = null; restoreOrigCanvas = null; restoreResultCanvas = null;
+  if (restoreOrigUrl) { URL.revokeObjectURL(restoreOrigUrl); restoreOrigUrl = null; }
+  restoreFileInput.value = '';
+  adjSliders.forEach(id => {
+    const s = document.getElementById(id);
+    s.value = id === 'adjSharpness' || id === 'adjDenoise' ? 0 : 0;
+    s.parentElement.querySelector('.adj-val').textContent = '0';
+  });
+});
+
+// Restore preview click to lightbox
+document.querySelectorAll('#restorePreview .card-body').forEach(body => {
+  body.addEventListener('click', () => {
+    const img = body.querySelector('img');
+    if (img && img.src) openLightbox(img.src);
   });
 });
 </script>
